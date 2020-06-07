@@ -3,7 +3,7 @@ package controllers
 import (
 	"app/src/utils"
 	"github.com/gorilla/mux"
-	"goach/models"
+	"github.com/stereoflo/goach/models"
 	"net/http"
 )
 

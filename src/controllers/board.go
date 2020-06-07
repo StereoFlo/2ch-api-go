@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"app/src/models"
 	"app/src/utils"
+	"goach/models"
 	"net/http"
 )
 

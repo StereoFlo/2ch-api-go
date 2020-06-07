@@ -32,7 +32,7 @@ func GetPort() string {
 
 func GetRouter() *mux.Router {
 	router := mux.NewRouter()
-	router.HandleFunc("/v1/board", controllers.List).Methods("GET")
+	router.HandleFunc("/v1/board", controllers.GetList).Methods("GET")
 	router.HandleFunc("/v1/board/{boardId}", controllers.GetById).Methods("GET")
 
 	return router

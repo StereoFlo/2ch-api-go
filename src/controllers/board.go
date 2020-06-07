@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func List(w http.ResponseWriter, r *http.Request) {
+func GetList(w http.ResponseWriter, r *http.Request) {
 	data := models.GetList()
 	utils.Respond(w, data)
 }

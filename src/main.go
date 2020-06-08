@@ -48,20 +48,15 @@ func RecoverWrap(h http.Handler) http.Handler {
 		var err error
 		defer func() {
 			r := recover()
-			if r != nil {
-				switch t := r.(type) {
-				case string:
-					err = errors.New(t)
-				case error:
-					err = t
-				default:
-					err = errors.New("Unknown error")
-				}
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-			} else {
+			switch t := r.(type) {
+			case string:
+				err = errors.New(t)
+			case error:
+				err = t
+			default:
 				err = errors.New("Unknown error")
-				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}()
 		h.ServeHTTP(w, r)
 	})

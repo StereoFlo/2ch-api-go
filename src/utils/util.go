@@ -5,12 +5,24 @@ import (
 	"net/http"
 )
 
+type Message struct {
+	Success bool        `json:"success"`
+	Message interface{} `json:"message"`
+}
+
 func Respond(w http.ResponseWriter, data interface{}) {
 	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(data)
+	json.NewEncoder(w).Encode(getMessage(true, data))
 }
 
 func RespondError(w http.ResponseWriter, data interface{}) {
 	w.WriteHeader(http.StatusInternalServerError)
-	w.Write([]byte("{\"error\": \"was an error\"}"))
+	json.NewEncoder(w).Encode(getMessage(false, data))
+}
+
+func getMessage(success bool, data interface{}) Message {
+	return Message{
+		Success: success,
+		Message: data,
+	}
 }

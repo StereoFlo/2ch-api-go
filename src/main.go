@@ -2,6 +2,7 @@ package main
 
 import (
 	"app/src/controllers"
+	"app/src/utils"
 	"errors"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -56,7 +57,7 @@ func RecoverWrap(h http.Handler) http.Handler {
 			default:
 				err = errors.New("Unknown error")
 			}
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			utils.RespondError(w, err)
 		}()
 		h.ServeHTTP(w, r)
 	})

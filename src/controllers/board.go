@@ -9,12 +9,18 @@ import (
 )
 
 func GetList(w http.ResponseWriter, r *http.Request) {
-	data, _ := category.GetList()
+	data, err := category.GetList()
+	if err != nil {
+		panic(err)
+	}
 	utils.Respond(w, data)
 }
 
 func GetById(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	data, _ := board.GetBoardById(vars["boardId"])
+	data, err := board.GetBoardById(vars["boardId"])
+	if err != nil {
+		panic(err)
+	}
 	utils.Respond(w, data)
 }

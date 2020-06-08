@@ -12,6 +12,5 @@ func Respond(w http.ResponseWriter, data interface{}) {
 
 func RespondError(w http.ResponseWriter, data interface{}) {
 	w.WriteHeader(http.StatusInternalServerError)
-	w.Header().Add("Content-Type", "application/json")
 	w.Write([]byte("{\"error\": \"was an error\"}"))
 }

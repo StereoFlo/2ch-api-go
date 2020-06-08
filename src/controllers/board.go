@@ -9,10 +9,7 @@ import (
 )
 
 func GetList(w http.ResponseWriter, r *http.Request) {
-	data, err := category.GetList()
-	if err != nil {
-		utils.RespondError(w, "error")
-	}
+	data, _ := category.GetList()
 	utils.Respond(w, data)
 }
 

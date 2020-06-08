@@ -2,7 +2,7 @@ package main
 
 import (
 	"app/src/controllers"
-	"fmt"
+	"errors"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	"log"
@@ -32,17 +32,37 @@ func GetPort() string {
 
 func GetRouter() *mux.Router {
 	router := mux.NewRouter()
-	router.HandleFunc("/v1/board", controllers.GetList).Methods("GET")
-	router.HandleFunc("/v1/board/{boardId}", controllers.GetById).Methods("GET")
+	router.Handle("/v1/board", RecoverWrap(http.HandlerFunc(controllers.GetList))).Methods("GET")
+	router.Handle("/v1/board/{boardId}", RecoverWrap(http.HandlerFunc(controllers.GetById))).Methods("GET")
 
 	return router
 }
 
 func Listen() {
-	err := http.ListenAndServe(":"+GetPort(), GetRouter())
+	http.Handle("/", GetRouter())
+	http.ListenAndServe(":"+GetPort(), nil)
+}
 
-	if err != nil {
-		fmt.Print(err)
-		return
-	}
+func RecoverWrap(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var err error
+		defer func() {
+			r := recover()
+			if r != nil {
+				switch t := r.(type) {
+				case string:
+					err = errors.New(t)
+				case error:
+					err = t
+				default:
+					err = errors.New("Unknown error")
+				}
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			} else {
+				err = errors.New("Unknown error")
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+		}()
+		h.ServeHTTP(w, r)
+	})
 }

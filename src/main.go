@@ -55,7 +55,7 @@ func RecoverWrap(h http.Handler) http.Handler {
 			case error:
 				err = t
 			default:
-				err = errors.New("Unknown error")
+				err = errors.New("error")
 			}
 			utils.RespondError(w, err)
 		}()

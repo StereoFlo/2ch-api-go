@@ -33,8 +33,8 @@ func GetPort() string {
 
 func GetRouter() *mux.Router {
 	router := mux.NewRouter()
-	router.Handle("/v1/board", RecoverWrap(http.HandlerFunc(controllers.GetList))).Methods("GET")
-	router.Handle("/v1/board/{boardId}", RecoverWrap(http.HandlerFunc(controllers.GetById))).Methods("GET")
+	router.Handle("/v1/board", MainHandler(http.HandlerFunc(controllers.GetList))).Methods("GET")
+	router.Handle("/v1/board/{boardId}", MainHandler(http.HandlerFunc(controllers.GetById))).Methods("GET")
 
 	return router
 }
@@ -44,7 +44,7 @@ func Listen() {
 	http.ListenAndServe(":"+GetPort(), nil)
 }
 
-func RecoverWrap(h http.Handler) http.Handler {
+func MainHandler(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var err error
 		defer func() {

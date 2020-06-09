@@ -11,6 +11,10 @@ import (
 	"os"
 )
 
+const boardList string = "/v1/board"
+const boardShow string = "/v1/board/{boardId}"
+const defaultPost string = "8000"
+
 func main() {
 	LoadEnv()
 	Listen()
@@ -26,15 +30,15 @@ func LoadEnv() {
 func GetPort() string {
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8000" //localhost
+		port = defaultPost
 	}
 	return port
 }
 
 func GetRouter() *mux.Router {
 	router := mux.NewRouter()
-	router.Handle("/v1/board", MainHandler(http.HandlerFunc(controllers.GetList))).Methods("GET")
-	router.Handle("/v1/board/{boardId}", MainHandler(http.HandlerFunc(controllers.GetById))).Methods("GET")
+	router.Handle(boardList, MainHandler(http.HandlerFunc(controllers.GetList))).Methods("GET")
+	router.Handle(boardShow, MainHandler(http.HandlerFunc(controllers.GetById))).Methods("GET")
 
 	return router
 }

@@ -50,19 +50,23 @@ func Listen() {
 
 func MainHandler(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var err error
 		defer func() {
-			r := recover()
-			switch t := r.(type) {
-			case string:
-				err = errors.New(t)
-			case error:
-				err = t
-			default:
-				err = errors.New("error")
-			}
-			utils.RespondError(w, err)
+			utils.RespondError(w, getError())
 		}()
 		h.ServeHTTP(w, r)
 	})
+}
+
+func getError() error {
+	var err error
+	r := recover()
+	switch t := r.(type) {
+	case string:
+		err = errors.New(t)
+	case error:
+		err = t
+	default:
+		err = errors.New("error")
+	}
+	return err
 }
